@@ -33,4 +33,5 @@ You should end with testing data that only shows a slight, downward trend in the
 ### 2. Creating the chess engine
 
 1. Download the CUDA 12.1 version of Libtorch [here](https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.3.0%2Bcu121.zip) and extract it to `./engine`.
-2. 
+2. Download files `./src/thc.h` and `./src/thc.cpp` from the [Triplehappy Chess](https://github.com/billforsternz/thc-chess-library/tree/master) repository.
+   - Place them in `./engine/thc-chess-library`.

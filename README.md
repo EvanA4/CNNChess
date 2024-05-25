@@ -2,6 +2,7 @@
 A convolutional neural network trained on Stockfish to evaluate chess boards, implemented into an engine.
 
 ## How does it work?
+beep bop boop bzzt
 
 ## Setup
 The setup for the chess engine is split up into two segments: training the CNN and compiling the C++ chess engine.
@@ -28,10 +29,35 @@ Here is an example of the model training data. Ideally, you should train the mod
 
 This testing data of the model is very similar to the training data.
 
-You should end with testing data that only shows a slight, downward trend in the loss.
+You should end with testing data that only shows a slight, downward trend in the loss. Place the resulting `eval_cnn.pt` model file into `./engine/`.
 
 ### 2. Creating the chess engine
 
-1. Download the CUDA 12.1 version of Libtorch [here](https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.3.0%2Bcu121.zip) and extract it to `./engine`.
+1. Download the CUDA 12.1, cxx11 ABI version of Libtorch [here](https://pytorch.org/) and extract it to `./engine`.
 2. Download files `./src/thc.h` and `./src/thc.cpp` from the [Triplehappy Chess](https://github.com/billforsternz/thc-chess-library/tree/master) repository.
    - Place them in `./engine/thc-chess-library`.
+3. Change directories into `./engine/build`.
+4. Enter `cmake -DCMAKE_PREFIX_PATH=/absolute/path/to/extracted_libtorch_folder -DTorch_DIR=/absolute/path/to/extracted_libtorch_folder/libtorch/share/cmake/Torch ..`
+5. Enter `cmake --build . --config Release`.
+
+## Running the engine in console (not recommended)
+
+The engine follows a very bare-bone implementation of the Universal Chess Interface ([UCI](https://wbec-ridderkerk.nl/html/UCIProtocol.html)).
+While in the build directory, enter `./engine`. It takes no arguments and is a mini-console.
+
+1. To load the CNN, enter `isready` in the mini-console.
+2. To set the position, enter one of the following:
+   - `position startpos` will set the engine's position to the beginning chess position.
+   - `position fen [fen]` will set the engine's position to the FEN string entered.
+   - `position fen [fen] moves [...moves]` will set the engine's position to the FEN string entered, plus the moves after the argument "moves".
+3. To compute the best move from the engine's position, enter the following:
+   - `go wtime [wtime] btime [btime] winc [winc] binc [binc]`
+   - "wtime" is the time left on white's clock
+   - "btime" is the time on black's clock
+   - "winc" is how much white's clock goes up when their turn ends
+   - "binc" is how much black's clock goes up when their turn ends
+
+## Running the engine in Lichess (recommended)
+
+
+

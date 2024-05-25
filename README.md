@@ -31,3 +31,6 @@ This testing data of the model is very similar to the training data.
 You should end with testing data that only shows a slight, downward trend in the loss.
 
 ### 2. Creating the chess engine
+
+1. Download the CUDA 12.1 version of Libtorch [here](https://download.pytorch.org/libtorch/cu121/libtorch-cxx11-abi-shared-with-deps-2.3.0%2Bcu121.zip) and extract it to `./engine`.
+2. 

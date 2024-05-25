@@ -2,7 +2,15 @@
 A convolutional neural network trained on Stockfish to evaluate chess boards, implemented into an engine.
 
 ## How does it work?
-beep bop boop bzzt
+I'll be brief, but I'd recommend you check out Sebastian Lague's chess engine [two-part series](https://www.youtube.com/watch?v=U4ogK0MIzqk&t=11s) on YouTube.
+
+Chess engines function—on a very basic level—similarly to humans. They (1) determine what moves they can make, (2) they evaluate how good these moves are, and (3) they decide which move to play.
+
+The first step, determining the moves, is done by a move generator. I did not code this, as chess rules are incredibly complicated and nuanced.
+
+The second step, evaluating the moves, is done by my CNN engine. Given a chess board, the CNN will output a float; the greater the float is, the better the position is for white. The model was trained to guess how good a board is for white and then check its guess with Stockfish's guess.
+
+The final step, deciding on a move, is done by the minimax algorithm. It's normally paired with alpha-beta pruning to reduce the number of moves to evaluate. It is not as simple as just picking the move with the highest score!
 
 ## Setup
 The setup for the chess engine is split up into two segments: training the CNN and compiling the C++ chess engine.

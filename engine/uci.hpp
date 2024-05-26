@@ -33,7 +33,7 @@ class UCI {
 
     // void push_move(std::vector<std::string> &fen, int &halfMoves, int &fullMoves, std::string &move);
     void get_search_time(int wtime, int btime, int winc, int binc);
-    float minimax(thc::ChessRules &cr, int depth, bool isWhite);
+    float minimax(thc::ChessRules &cr, int depth, float alpha, float beta, bool isWhite);
 
     public:
         void go(std::vector<std::string> &args);

@@ -34,7 +34,7 @@ void UCI::get_search_time(int wtime, int btime, int winc, int binc) {
 
 
 // returns move as a string and its eval
-float UCI::minimax(thc::ChessRules &cr, int depth, bool isWhite) {
+float UCI::minimax(thc::ChessRules &cr, int depth, float alpha, float beta, bool isWhite) {
     // if we're past time, stop
     int duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - searchStart).count();
     if (duration > searchTime) {
@@ -68,7 +68,7 @@ float UCI::minimax(thc::ChessRules &cr, int depth, bool isWhite) {
 
             } else {
                 cr.PushMove(moves[i]);
-                currentEval = minimax(cr, depth - 1, !isWhite);
+                currentEval = minimax(cr, depth - 1, alpha, beta, !isWhite);
                 cr.PopMove(moves[i]);
             }
 
@@ -84,13 +84,18 @@ float UCI::minimax(thc::ChessRules &cr, int depth, bool isWhite) {
                     bestMove = moves[i];
                 }
             }
+
+            alpha = currentEval > alpha ? currentEval : alpha;
+            if (beta <= alpha) {
+                break;
+            }
         }
 
         return maxEval;
     }
 
     else {
-        float maxEval = __FLT_MAX__;
+        float minEval = __FLT_MAX__;
         
         // generate moves
         std::vector<thc::Move> moves;
@@ -112,7 +117,7 @@ float UCI::minimax(thc::ChessRules &cr, int depth, bool isWhite) {
 
             } else {
                 cr.PushMove(moves[i]);
-                currentEval = minimax(cr, depth - 1, !isWhite);
+                currentEval = minimax(cr, depth - 1, alpha, beta, !isWhite);
                 cr.PopMove(moves[i]);
             }
 
@@ -121,16 +126,21 @@ float UCI::minimax(thc::ChessRules &cr, int depth, bool isWhite) {
                 return OUT_OF_TIME;
             }
 
-            if (currentEval < maxEval) {
-                maxEval = currentEval;
+            if (currentEval < minEval) {
+                minEval = currentEval;
 
                 if (depth == searchDepth) {
                     bestMove = moves[i];
                 }
             }
+
+            beta = currentEval < beta ? currentEval : beta;
+            if (beta <= alpha) {
+                break;
+            }
         }
 
-        return maxEval;
+        return minEval;
     }
 
     return .0F;
@@ -160,7 +170,7 @@ void UCI::go(std::vector<std::string> &args) {
 
     while (true) {
         // std::cout << "Beginning search of depth " << searchDepth << std::endl;
-        if (minimax(cr, searchDepth, isWhite) == OUT_OF_TIME) break;
+        if (minimax(cr, searchDepth, -__FLT_MAX__, __FLT_MAX__, isWhite) == OUT_OF_TIME) break;
         // std::cout << "current move: " << bestMove.TerseOut() << std::endl;
         ++searchDepth;
         backup = bestMove;

@@ -43,8 +43,8 @@ You should end with testing data that only shows a slight, downward trend in the
 
 1. Download the CUDA 12.1, cxx11 ABI version of Libtorch [here](https://pytorch.org/) and extract it to `./engine`.
 2. Download files `./src/thc.h` and `./src/thc.cpp` from the [Triplehappy Chess](https://github.com/billforsternz/thc-chess-library/tree/master) repository.
-   - Place them in `./engine/thc-chess-library`.
-3. Change directories into `./engine/build`.
+   - Create new directory `./engine/thc-chess-library` and place them there.
+3. Create new directory `./engine/build` change directories into there.
 4. Enter `cmake -DCMAKE_PREFIX_PATH=/absolute/path/to/extracted_libtorch_folder -DTorch_DIR=/absolute/path/to/extracted_libtorch_folder/libtorch/share/cmake/Torch ..`
 5. Enter `cmake --build . --config Release`.
 

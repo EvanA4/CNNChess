@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 #include <torch/script.h>
 #include "uci.hpp"
 // #include "chess-library/include/chess.hpp"
@@ -34,15 +35,24 @@ int main() {
     std::string cmd;
     UCI engine;
 
+    std::ofstream fout("log.txt");
+    if (!fout.is_open()) {
+        std::cerr << "Error: failed to open log file." << std::endl;
+        exit(1);
+    }
+
     while (true) {
         std::getline(std::cin, cmd);
+        fout << cmd << std::endl;
         parse_args(cmd, args);
 
         if (args[0] == "uci") {
+            fout << "uciok" << std::endl;
             std::cout << "uciok" << std::endl;
 
         } else if (args[0] == "isready") {
             engine.load_assets("../cppEvalModel.pt");
+            fout << "readyok" << std::endl;
             std::cout << "readyok" << std::endl;
 
         } else if (args[0] == "position") {
@@ -50,10 +60,8 @@ int main() {
 
         } else if (args[0] == "go") {
             std::string move = engine.go(args);
+            fout << ((int) move.length() == 4 ? "bestmove " : "") << move << std::endl;
             std::cout << ((int) move.length() == 4 ? "bestmove " : "") << move << std::endl;
-
-        } else if (args[0] == "eval") {
-            std::cout << engine.eval() << std::endl;
 
         } else if (args[0] == "quit") {
             exit(0);
@@ -62,7 +70,7 @@ int main() {
 }
 
 /*
-cmake --build . --config Release
+Some example commands:
 go wtime 300000 btime 300000 winc 2000 binc 2000
 position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves b1c3
 */

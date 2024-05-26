@@ -88,7 +88,7 @@ if __name__ == "__main__":
         os.mkdir(datapath + f"/{CHUNKSIZE}chunks")
 
     # begin reading data
-    f = open((datapath + "/lichess_db_eval.json").replace("\\", "/"))
+    f = open((datapath + "/lichess_db_eval.jsonl").replace("\\", "/"))
     ctr = 0
     df = pd.DataFrame(columns=['Boards', 'Score'])
 

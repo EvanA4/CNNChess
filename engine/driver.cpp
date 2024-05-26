@@ -42,7 +42,7 @@ int main() {
             std::cout << "uciok" << std::endl;
 
         } else if (args[0] == "isready") {
-            engine.load_assets("/home/evana/Documents/myPrograms/projects/chessEval/eval_cnn.pt");
+            engine.load_assets("cppEvalModel.pt");
             std::cout << "readyok" << std::endl;
 
         } else if (args[0] == "position") {

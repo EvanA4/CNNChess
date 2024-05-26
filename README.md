@@ -37,7 +37,7 @@ Here is an example of the model training data. Ideally, you should train the mod
 
 This testing data of the model is very similar to the training data.
 
-You should end with testing data that only shows a slight, downward trend in the loss. Place the resulting `eval_cnn.pt` model file into `./engine/`.
+You should end with testing data that only shows a slight, downward trend in the loss. Place the resulting `cppEvalModel.pt` model file into `./engine/`.
 
 ### 2. Creating the chess engine
 

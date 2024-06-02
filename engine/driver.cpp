@@ -1,9 +1,8 @@
 #include <iostream>
 #include <vector>
-#include <fstream>
+#include <filesystem>
 #include <torch/script.h>
 #include "uci.hpp"
-// #include "chess-library/include/chess.hpp"
 #include "thc-chess-library/thc.h"
 
 
@@ -29,30 +28,24 @@ void parse_args(std::string &cmd, std::vector<std::string> &args) {
 }
 
 
-int main() {
+int main(int argc, char** argv) {
+
     c10::InferenceMode guard;
     std::vector<std::string> args;
     std::string cmd;
     UCI engine;
 
-    std::ofstream fout("log.txt");
-    if (!fout.is_open()) {
-        std::cerr << "Error: failed to open log file." << std::endl;
-        exit(1);
-    }
-
     while (true) {
         std::getline(std::cin, cmd);
-        fout << cmd << std::endl;
         parse_args(cmd, args);
 
         if (args[0] == "uci") {
-            fout << "uciok" << std::endl;
             std::cout << "uciok" << std::endl;
 
         } else if (args[0] == "isready") {
-            engine.load_assets("../cppEvalModel.pt");
-            fout << "readyok" << std::endl;
+            std::string fileDir = argv[0];
+            fileDir = fileDir.substr(0, fileDir.size() - 8) + "cppEvalModel.pt";
+            engine.load_assets(fileDir);
             std::cout << "readyok" << std::endl;
 
         } else if (args[0] == "position") {
@@ -60,8 +53,7 @@ int main() {
 
         } else if (args[0] == "go") {
             std::string move = engine.go(args);
-            fout << ((int) move.length() == 4 ? "bestmove " : "") << move << std::endl;
-            std::cout << ((int) move.length() == 4 ? "bestmove " : "") << move << std::endl;
+            std::cout << "bestmove " << move << std::endl;
 
         } else if (args[0] == "quit") {
             exit(0);
@@ -70,7 +62,12 @@ int main() {
 }
 
 /*
-Some example commands:
+To compile after making changes:
+cmake --build . --config Release
+
+Some reference commands for miniconsole:
+uci
+isready
 go wtime 300000 btime 300000 winc 2000 binc 2000
 position fen rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 moves b1c3
 */

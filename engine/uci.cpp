@@ -210,7 +210,6 @@ void UCI::position(std::vector<std::string> &args) {
 
     // initialize chess board
     cr.Forsyth(startFEN.c_str());
-    isWhite = cr.WhiteToPlay();
 
     // play moves, if any
     int i = startpos ? 3 : 9;
@@ -219,6 +218,8 @@ void UCI::position(std::vector<std::string> &args) {
         mv.TerseIn(&cr, args[i].c_str());
         cr.PlayMove(mv);
     }
+
+    isWhite = cr.WhiteToPlay();
 }
 
 
@@ -251,21 +252,22 @@ double UCI::eval() {
 
     // then evaluate
     std::vector<torch::jit::IValue> inputs;
-    // inputs.push_back(boards); // for CPU
-    inputs.push_back(boards.to(torch::kCUDA)); // load on GPU
+    inputs.push_back(boards); // for CPU
+    // inputs.push_back(boards.to(torch::kCUDA)); // load on GPU
     return model.forward(inputs).toTensor().item<float>();
 }
 
 
 // loads the given CNN file and move generator databases
 void UCI::load_assets(std::string file) {
-    try {
-        // model = torch::jit::load(file);
-        model = torch::jit::load(file, torch::kCUDA); // load on GPU
+    // try {
+    model = torch::jit::load(file, torch::kCPU);
+    // model = torch::jit::load(file, torch::kCUDA); // load on GPU
 
-        modelLoaded = true;
+    modelLoaded = true;
 
-    } catch (const c10::Error& e) {
-        std::cerr << "Error: failed to load model" << std::endl;
-    }
+    // } catch (const c10::Error& e) {
+    //     std::cerr << "Error: failed to load model" << std::endl;
+    //     exit(1);
+    // }
 }

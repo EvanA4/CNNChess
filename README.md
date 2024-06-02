@@ -29,29 +29,31 @@ The setup for the chess engine is split up into two segments: training the CNN a
    - I recommend starting at 269 chunks of 10,000 boards each and reducing the number of chunks from there.
    - To do this, enter `python3 torch_eval.py 269 10000`.
      
-![image of training data](/cnn/referenceTrain.png)
+![image of training data](/cnn/references/referenceTrain.png)
 
 Here is an example of the model training data. Ideally, you should train the model until the model diverges at around 170 chunks.
 
-![image of testing data](/cnn/referenceTest.png)
+![image of testing data](/cnn/references/referenceTest.png)
 
 This testing data of the model is very similar to the training data.
 
-You should end with testing data that only shows a slight, downward trend in the loss. Place the resulting `cppEvalModel.pt` model file into `./engine/`.
+You should end with testing data that only shows a slight, downward trend in the loss. Place the resulting `cppEvalModel.pt` model file into a new directory called `./engine/build`.
 
 ### 2. Creating the chess engine
 
 1. Download the CUDA 12.1, cxx11 ABI version of Libtorch [here](https://pytorch.org/) and extract it to `./engine`.
 2. Download files `./src/thc.h` and `./src/thc.cpp` from the [Triplehappy Chess](https://github.com/billforsternz/thc-chess-library/tree/master) repository.
    - Create new directory `./engine/thc-chess-library` and place them there.
-3. Create new directory `./engine/build` and change directories into there.
+3. Change directories into `./engine/build`.
 4. Enter `cmake -DCMAKE_PREFIX_PATH=/absolute/path/to/extracted_libtorch_folder -DTorch_DIR=/absolute/path/to/extracted_libtorch_folder/libtorch/share/cmake/Torch ..`
 5. Enter `cmake --build . --config Release`.
+
+After this, you should have a chess engine executable at `./engine/build/cnnChess`.
 
 ## Running the engine in console (not recommended)
 
 The engine follows a very bare-bone implementation of the Universal Chess Interface ([UCI](https://wbec-ridderkerk.nl/html/UCIProtocol.html)).
-While in the build directory, enter `./engine`. It takes no arguments and is a mini-console.
+While in the build directory, enter `./cnnChess`. It takes no arguments and is a mini-console.
 
 1. To load the CNN, enter `isready` in the mini-console.
 2. To set the position, enter one of the following:
@@ -65,7 +67,12 @@ While in the build directory, enter `./engine`. It takes no arguments and is a m
    - "winc" is how much white's clock goes up when their turn ends
    - "binc" is how much black's clock goes up when their turn ends
 
-## Running the engine in Lichess (recommended)
+## Running the engine in UCIvsGUI
 
+[UCIvsGUI](https://github.com/EvanA4/UCIvsGUI) is my own GUI for playing against UCI engines.
+
+To run it, simply grab the engine binary `./engine/build/cnnChess` and the CNN model `./engine/build/cppEvalModel.py` and place them in the same directory as `UCIvsGUI/play.py`. To run the GUI while working in the same directory, enter `python3 play.py -e ./cnnChess`. Make sure you have `chess`, `cairosvg`, and `pygame` installed with pip in whatever Python environment you're using.
+
+For more usage instructions for UCIvsGUI, check out the repository.
 
 
